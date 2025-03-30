@@ -1,3 +1,19 @@
+## Screenshots:
+
+### Homepage:
+![Home Page](frontend/public/e1.png)
+
+### Product Listing:
+![Product Listing](frontend/public/e2.png)
+
+### Product Details:
+![Product Details](frontend/public/e3.png)
+
+### Cart:
+![Cart Page](frontend/public/e4.png)
+
+### Checkout & Payment:
+![Checkout Page](frontend/public/e5.png)
 
 # E-Commerce Website Application
 
@@ -19,29 +35,12 @@ This is a full-stack e-commerce website built using the MERN (MongoDB, Express, 
 - **Authentication**: JWT, Bcrypt
 - **Image Hosting**: Cloudinary
 
-## Screenshots:
-
-### Homepage:
-![Home Page](frontend/public/e1.png)
-
-### Product Listing:
-![Product Listing](frontend/public/e2.png)
-
-### Product Details:
-![Product Details](frontend/public/e3.png)
-
-### Cart:
-![Cart Page](frontend/public/e4.png)
-
-### Checkout & Payment:
-![Checkout Page](frontend/public/e5.png)
 
 ## Installation:
 
 1. Clone the repository:
    ```bash
-   git clone <repository_url>
-   cd <project_folder>
+   git clone https://github.com/Afzal-Mia/MyShop.git
    ```
 
 2. Install dependencies for both frontend and backend:
@@ -111,3 +110,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 For any issues or feedback, feel free to reach out to me via email: mohammedafzal1213@gmail.com.
+
+#mern
+#ecommerce
+#nodejs
+#reactjs
+#open_source
+#context_Api
+#payment-gateway
+#razor_Pay
