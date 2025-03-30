@@ -27,6 +27,11 @@ This is a full-stack e-commerce website built using the MERN (MongoDB, Express, 
 - **Admin Panel**: Admins can manage products, view orders, and handle user accounts.
 - **Cloudinary**: For storing and serving product images.
 
+## Live Links:
+- **Frontend**: [https://myshop-1-97f4.onrender.com/](https://myshop-1-97f4.onrender.com/)
+- **Admin Panel**: [https://myshop-admin.onrender.com](https://myshop-admin.onrender.com)
+
+
 ## Technology Stack:
 - **Frontend**: React.js, Tailwind CSS
 - **Backend**: Node.js, Express.js
@@ -64,8 +69,8 @@ This is a full-stack e-commerce website built using the MERN (MongoDB, Express, 
    RAZORPAY_KEY_SECRET=<your_razorpay_key_secret>
    STRIPE_SECRET_KEY=<your_stripe_secret_key>
    JWT_SECRET=<your_jwt_secret_key>
-   ADMIN_EMAIL=mohammedafzal1213@gmail.com
-   ADMIN_PASSWORD=afzal@1234
+   ADMIN_EMAIL=Your_email
+   ADMIN_PASSWORD=Your_password
    MONGODB_URI=<your_mongodb_connection_uri>
    CLOUDINARY_NAME=<your_cloudinary_name>
    CLOUDINARY_API_KEY=<your_cloudinary_api_key>
