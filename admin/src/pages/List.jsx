@@ -8,25 +8,42 @@ const List = ({ token }) => {
   const [loading, setLoading] = useState(true);
 
   const fetchList = async () => {
+    if (!token) {
+      toast.error('Authentication token is missing.');
+      setLoading(false);
+      return;
+    }
+
     try {
       setLoading(true);
-      const response = await axios.get(`${backendUrl}/api/product/list`);
+      const response = await axios.get(`${backendUrl}/api/product/list`, {
+        headers: { token },
+      });
       if (response.data.success) {
         setList(response.data.products);
       } else {
         toast.error(response.data.message);
       }
     } catch (error) {
-      console.error(error);
-      toast.error(error.message);
+      console.error('Error fetching product list:', error);
+      toast.error('Failed to fetch product list.');
     } finally {
       setLoading(false);
     }
   };
 
   const removeProduct = async (id) => {
+    if (!token) {
+      toast.error('Authentication token is missing.');
+      return;
+    }
+
     try {
-      const response = await axios.post(`${backendUrl}/api/product/remove`, { id }, { headers: { token } });
+      const response = await axios.post(
+        `${backendUrl}/api/product/remove`,
+        { id },
+        { headers: { token } }
+      );
       if (response.data.success) {
         toast.success(response.data.message);
         setList((prevList) => prevList.filter((item) => item._id !== id));
@@ -34,14 +51,14 @@ const List = ({ token }) => {
         toast.error(response.data.message);
       }
     } catch (error) {
-      console.error(error);
-      toast.error(error.message);
+      console.error('Error removing product:', error);
+      toast.error('Failed to remove product.');
     }
   };
 
   useEffect(() => {
     fetchList();
-  }, []);
+  }, [token]); // Refetch when token changes
 
   return (
     <div className="p-4">
@@ -57,10 +74,13 @@ const List = ({ token }) => {
       </div>
 
       {/* Loading State (Skeleton) */}
-      {loading && (
+      {loading ? (
         <div className="space-y-2 mt-2">
           {[...Array(5)].map((_, index) => (
-            <div key={index} className="grid grid-cols-[1fr_3fr_1fr_1fr_1fr] items-center py-2 px-4 animate-pulse">
+            <div
+              key={index}
+              className="grid grid-cols-[1fr_3fr_1fr_1fr_1fr] items-center py-2 px-4 animate-pulse"
+            >
               <div className="w-12 h-12 bg-gray-300 rounded-md"></div>
               <div className="h-4 bg-gray-300 rounded w-3/4"></div>
               <div className="h-4 bg-gray-300 rounded w-1/2"></div>
@@ -69,23 +89,24 @@ const List = ({ token }) => {
             </div>
           ))}
         </div>
-      )}
-
-      {/* Product List */}
-      {!loading && list.length === 0 && (
+      ) : list.length === 0 ? (
         <p className="text-center text-gray-500 mt-4">No products found.</p>
-      )}
-
-      {!loading &&
+      ) : (
         list.map((item) => (
           <div
             key={item._id}
-            className="grid grid-cols-[1fr_3fr_1fr] md:grid-cols-[1fr_3fr_1fr_1fr_1fr] items-center gap-4 py-2 px-4 border-b text-sm transition-all hover:bg-gray-50"
+            className="grid grid-cols-[1fr_3fr_1fr_1fr_1fr] items-center gap-4 py-2 px-4 border-b text-sm transition-all hover:bg-gray-50"
           >
-            <img src={item.image[0]} className="w-12 h-12 object-cover rounded-md" alt={item.name} />
+            <img
+              src={item.image[0]}
+              className="w-12 h-12 object-cover rounded-md"
+              alt={item.name}
+            />
             <p className="truncate">{item.name}</p>
             <p className="text-gray-600">{item.category}</p>
-            <p className="text-green-600 font-semibold">{currency} {item.price}</p>
+            <p className="text-green-600 font-semibold">
+              {currency} {item.price}
+            </p>
             <button
               onClick={() => removeProduct(item._id)}
               className="text-red-500 hover:text-red-700 transition text-lg text-center"
@@ -93,7 +114,8 @@ const List = ({ token }) => {
               ✖
             </button>
           </div>
-        ))}
+        ))
+      )}
     </div>
   );
 };

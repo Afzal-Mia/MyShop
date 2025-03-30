@@ -8,8 +8,11 @@ const Orders = ({ token }) => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    if (token) fetchAllOrders();
+  }, [token]);
+
   const fetchAllOrders = async () => {
-    if (!token) return;
     try {
       setLoading(true);
       const response = await axios.post(
@@ -17,13 +20,14 @@ const Orders = ({ token }) => {
         {},
         { headers: { token } }
       );
+
       if (response.data.success) {
         setOrders(response.data.orders.reverse());
       } else {
-        toast.error(response.data.message);
+        throw new Error(response.data.message);
       }
     } catch (error) {
-      toast.error("Failed to fetch orders!");
+      toast.error(error?.response?.data?.message || "Failed to fetch orders!");
     } finally {
       setLoading(false);
     }
@@ -37,6 +41,7 @@ const Orders = ({ token }) => {
         { orderId, status: newStatus },
         { headers: { token } }
       );
+
       if (response.data.success) {
         setOrders((prevOrders) =>
           prevOrders.map((order) =>
@@ -44,15 +49,13 @@ const Orders = ({ token }) => {
           )
         );
         toast.success("Order status updated!");
+      } else {
+        throw new Error(response.data.message);
       }
     } catch (error) {
-      toast.error("Failed to update status!");
+      toast.error(error?.response?.data?.message || "Failed to update status!");
     }
   };
-
-  useEffect(() => {
-    fetchAllOrders();
-  }, [token]);
 
   return (
     <div className="p-4">
@@ -77,7 +80,7 @@ const Orders = ({ token }) => {
 
       {/* Orders List */}
       {!loading &&
-        orders.map((order, index) => (
+        orders.map((order) => (
           <div
             key={order._id}
             className="grid grid-cols-1 sm:grid-cols-[0.5fr_2fr_1fr] lg:grid-cols-[0.5fr_2fr_1fr_1fr_1fr] gap-3 items-start border-2 p-5 rounded-md shadow-sm hover:shadow-md transition-all mb-4"
@@ -95,8 +98,13 @@ const Orders = ({ token }) => {
               <p className="mt-3 font-medium">
                 {order.address.firstName} {order.address.lastName}
               </p>
-              <p className="text-gray-600">{order.address.street}, {order.address.city}</p>
-              <p className="text-gray-600">{order.address.state}, {order.address.country}, {order.address.zipcode}</p>
+              <p className="text-gray-600">
+                {order.address.street}, {order.address.city}
+              </p>
+              <p className="text-gray-600">
+                {order.address.state}, {order.address.country},{" "}
+                {order.address.zipcode}
+              </p>
               <p className="text-gray-700">📞 {order.address.phone}</p>
             </div>
 
@@ -105,15 +113,27 @@ const Orders = ({ token }) => {
               <p className="text-sm">Items: {order.items.length}</p>
               <p className="text-gray-600">Method: {order.paymentMethod}</p>
               <p className="text-gray-600">
-                Payment: <span className={order.payment ? "text-green-600 font-semibold" : "text-red-500 font-semibold"}>
+                Payment:{" "}
+                <span
+                  className={
+                    order.payment
+                      ? "text-green-600 font-semibold"
+                      : "text-red-500 font-semibold"
+                  }
+                >
                   {order.payment ? "PAID" : "PENDING"}
                 </span>
               </p>
-              <p className="text-gray-600">Date: {new Date(order.date).toLocaleDateString()}</p>
+              <p className="text-gray-600">
+                Date: {new Date(order.date).toLocaleDateString()}
+              </p>
             </div>
 
             {/* Price */}
-            <p className="text-green-600 font-semibold">{currency}{order.amount}</p>
+            <p className="text-green-600 font-semibold">
+              {currency}
+              {order.amount}
+            </p>
 
             {/* Order Status */}
             <select
